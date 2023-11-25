@@ -4,9 +4,15 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import MessagesContainer from './MessagesContainer';
+
+type Message = {
+  timestamp: number;
+  message: string;
+}
 
 function App() {
-  const [messageHistory, setMessageHistory] = useState([]);
+  const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [currentMessage, setMessage] = useState('');
 
   const { sendJsonMessage, lastMessage: lastJsonMessage, readyState } = useWebSocket(
@@ -25,7 +31,7 @@ function App() {
       console.log('lastMessage: ', messageData)
     }
   }, [lastJsonMessage, setMessageHistory]);
-  
+
 
   const sendMessage = async () => {
     console.log(currentMessage)
@@ -34,9 +40,9 @@ function App() {
   }
 
   const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Conectando',
-    [ReadyState.OPEN]: 'Aberto',
-    [ReadyState.CLOSING]: 'Fechando',
+    [ReadyState.CONNECTING]: 'Entrando',
+    [ReadyState.OPEN]: 'Online',
+    [ReadyState.CLOSING]: 'Saindo',
     [ReadyState.CLOSED]: 'Fechado',
     [ReadyState.UNINSTANTIATED]: 'Não instanciado',
   }[readyState];
@@ -44,22 +50,25 @@ function App() {
   return (
     <div className='chat-container'>
       <div className="chat">
-        <input type="text" value={currentMessage} onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            sendMessage()
-          }
-        }} onChange={(e) => setMessage(e.target.value)} />
-        <button type="button" onClick={sendMessage} disabled={readyState !== ReadyState.OPEN}>
-          Enviar
-        </button>
-        <span>O socket está: {connectionStatus}</span>
-        {lastJsonMessage ? <span>Ultima mensagem: {lastJsonMessage.data}</span> : null}
-        <ul>
-          {messageHistory.map((message: any, idx: number) => (
-            <span key={idx}>{message ? JSON.parse(message.message) : null}</span>
+        <span>Status do socket: {connectionStatus}</span>
+        <div className="message-container">
+          {messageHistory.map((message) => (
+            <MessagesContainer key={message.timestamp} timestamp={message.timestamp} message={message.message} />
           ))}
-        </ul>
+        </div>
+        <div className="send">
+          <input type="text" placeholder='Digite a mensagem...' value={currentMessage} onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage()
+            }
+          }} onChange={(e) => setMessage(e.target.value)} />
+          <button type="button" className='button' onClick={sendMessage} disabled={readyState !== ReadyState.OPEN}>
+            Enviar
+          </button>
+
+        </div>
       </div>
+        <div className="back" />
     </div>
   )
 }

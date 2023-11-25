@@ -1,14 +1,110 @@
-.chat-container {width: 100%;
-height: 100vh;
-background: #fff;
+.chat-container {
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+  display: flex;
 }
 
 .chat {
-  width: 50%;
-  height: 50%;
-  margin: 0 auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background: white;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  width: 30%;
+  
+}
+
+.chat .send {
+  width: 100%;
+  display: flex;
+  height: 4%;
+  justify-content: space-between;
+  margin-bottom: 4rem;
+}
+
+.chat .send input {
+  width: 75%;
+  height: 100%;
+  padding: 0 20px;
+  font-size: 16px;
+}
+
+button {
+  --color: #00A97F;
+  --color2: rgb(10, 25, 30);
+  padding: 0px 1.75em ;
+  background-color: transparent;
+  border-radius: 6px;
+  border: .3px solid var(--color);
+  transition: .5s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+  font-weight: 300;
+  font-size: 17px;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  text-transform: uppercase;
+  color: var(--color);
+ }
+ 
+ button::after, button::before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: skew(90deg) translate(-50%, -50%);
+  position: absolute;
+  inset: 50%;
+  left: 25%;
+  z-index: -1;
+  transition: .5s ease-out;
+  background-color: var(--color);
+ }
+ 
+ button::before {
+  top: -50%;
+  left: -25%;
+  transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
+ }
+ 
+ button:hover::before {
+  transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
+ }
+ 
+ button:hover::after {
+  transform: skew(45deg) translate(-50%, -50%);
+ }
+ 
+ button:hover {
+  color: var(--color2);
+ }
+ 
+ button:active {
+  filter: brightness(.7);
+  transform: scale(.98);
+ }
+
+.message-container {
+  width: 100%;
+  height: 80%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.chat-roll {
+  display: flex;
+  gap: 1rem;
+}
+
+.back {
+  width: 70%;
+  height: 100%;
+  background-image: url('https://as1.ftcdn.net/v2/jpg/05/70/36/18/1000_F_570361890_CVUB9tkrCfTfWxRvLESWxPOwApb9HOlr.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; 
 }
