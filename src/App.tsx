@@ -3,7 +3,7 @@ import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 function App() {
-  const [messageHistory, setMessageHistory] = useState<any>([]);
+  const [messageHistory, setMessageHistory] = useState([]);
   const [currentMessage, setMessage] = useState('');
 
   const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
