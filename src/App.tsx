@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
@@ -15,10 +18,12 @@ function App() {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      setMessageHistory((prev: any) => prev.concat(JSON.parse(lastMessage)));
-      console.log(lastMessage);
+      const messageData = lastMessage.data;
+      setMessageHistory((prev: any) => prev.concat(JSON.parse(messageData)));
+      console.log(messageData);
     }
   }, [lastMessage, setMessageHistory]);
+  
 
   const handleClickSendMessage = useCallback(() => {
     sendJsonMessage(JSON.stringify(currentMessage));
