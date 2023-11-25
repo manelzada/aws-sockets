@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
@@ -22,12 +22,14 @@ function App() {
       setMessageHistory((prev: any) => prev.concat(JSON.parse(messageData)));
       console.log(messageData);
     }
+    console.log('lastMessage: ', lastMessage)
   }, [lastMessage, setMessageHistory]);
   
 
-  const handleClickSendMessage = useCallback(() => {
+  const sendMessage = async () => {
+    console.log(currentMessage)
     sendJsonMessage(JSON.stringify(currentMessage));
-  }, []);
+  }
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Conectando',
@@ -41,14 +43,14 @@ function App() {
     <div className='chat-container'>
       <div className="chat">
         <input type="text" value={currentMessage} onChange={(e) => setMessage(e.target.value)} />
-        <button type="button" onClick={handleClickSendMessage} disabled={readyState !== ReadyState.OPEN}>
+        <button type="button" onClick={sendMessage} disabled={readyState !== ReadyState.OPEN}>
           Enviar
         </button>
         <span>O socket está: {connectionStatus}</span>
         {lastMessage ? <span>Ultima mensagem: {lastMessage.data}</span> : null}
         <ul>
           {messageHistory.map((message: any, idx: number) => (
-            <span key={idx}>{message ? message.data : null}</span>
+            <span key={idx}>{message ? JSON.parse(message.data) : null}</span>
           ))}
         </ul>
       </div>
