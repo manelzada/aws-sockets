@@ -9,7 +9,7 @@ function App() {
   const [messageHistory, setMessageHistory] = useState([]);
   const [currentMessage, setMessage] = useState('');
 
-  const { sendJsonMessage, lastMessage, readyState } = useWebSocket(
+  const { sendJsonMessage, lastMessage: lastJsonMessage, readyState } = useWebSocket(
     'wss://3ie59gxh10.execute-api.us-east-1.amazonaws.com/dev',
     {
       onOpen: () => console.log('Conexão estabelecida!'),
@@ -17,18 +17,19 @@ function App() {
   );
 
   useEffect(() => {
-    if (lastMessage !== null) {
-      const messageData = lastMessage.data;
+    if (lastJsonMessage !== null) {
+      console.log('lastJsonMessage: ', lastJsonMessage)
+      const messageData = lastJsonMessage.data;
       setMessageHistory((prev: any) => prev.concat(JSON.parse(messageData)));
       console.log(messageData);
+      console.log('lastMessage: ', messageData)
     }
-    console.log('lastMessage: ', lastMessage)
-  }, [lastMessage, setMessageHistory]);
+  }, [lastJsonMessage, setMessageHistory]);
   
 
   const sendMessage = async () => {
     console.log(currentMessage)
-    sendJsonMessage(JSON.stringify(currentMessage));
+    sendJsonMessage(currentMessage);
   }
 
   const connectionStatus = {
@@ -42,15 +43,19 @@ function App() {
   return (
     <div className='chat-container'>
       <div className="chat">
-        <input type="text" value={currentMessage} onChange={(e) => setMessage(e.target.value)} />
+        <input type="text" value={currentMessage} onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            sendMessage()
+          }
+        }} onChange={(e) => setMessage(e.target.value)} />
         <button type="button" onClick={sendMessage} disabled={readyState !== ReadyState.OPEN}>
           Enviar
         </button>
         <span>O socket está: {connectionStatus}</span>
-        {lastMessage ? <span>Ultima mensagem: {lastMessage.data}</span> : null}
+        {lastJsonMessage ? <span>Ultima mensagem: {lastJsonMessage.data}</span> : null}
         <ul>
           {messageHistory.map((message: any, idx: number) => (
-            <span key={idx}>{message ? JSON.parse(message.data) : null}</span>
+            <span key={idx}>{message ? JSON.parse(message.message) : null}</span>
           ))}
         </ul>
       </div>
