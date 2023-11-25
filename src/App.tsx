@@ -30,6 +30,7 @@ function App() {
   const sendMessage = async () => {
     console.log(currentMessage)
     sendJsonMessage(currentMessage);
+    setMessage('');
   }
 
   const connectionStatus = {
